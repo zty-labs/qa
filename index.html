@@ -25,9 +25,9 @@ body{
 }
 .screen{
   position:fixed;inset:0;z-index:1;display:none;
-  flex-direction:column;justify-content:flex-end;
+  flex-direction:column;justify-content:flex-start;
   overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding:14px 14px 0;
+  padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom));
 }
 .screen.on{display:flex}
 
@@ -40,10 +40,10 @@ body{
   border-radius:28px;
   padding:26px 22px;
   padding-bottom:calc(26px + env(safe-area-inset-bottom));
-  box-shadow:0 -10px 44px -16px rgba(28,40,80,.32);
+  box-shadow:0 12px 44px -18px rgba(28,40,80,.34);
   animation:in .45s cubic-bezier(.22,.8,.3,1);
 }
-@keyframes in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes in{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none}}
 
 /* ---------- 封面 ---------- */
 .eyebrow{font-size:11.5px;letter-spacing:2.6px;color:#a3aabf;font-weight:600;margin-bottom:14px}
