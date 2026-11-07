@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>聊聊你</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  background:#f6f7fb;color:#1d2129;
+  -webkit-font-smoothing:antialiased;
+}
+.screen{
+  position:fixed;inset:0;padding:28px 24px;
+  padding-bottom:calc(28px + env(safe-area-inset-bottom));
+  display:none;flex-direction:column;
+  background:linear-gradient(180deg,#f9fafd 0%,#f1f3f9 100%);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.screen.on{display:flex}
+.wrap{width:100%;max-width:560px;margin:0 auto;flex:1;display:flex;flex-direction:column;justify-content:center;min-height:100%}
+h1{font-size:26px;font-weight:600;margin:0 0 14px;letter-spacing:.5px}
+.sub{font-size:15px;line-height:1.8;color:#61667a;margin:0 0 34px}
+.sub span{display:block}
+.tip{font-size:13px;color:#9aa0b0;margin-top:26px;line-height:1.7}
+.btn{
+  display:block;width:100%;border:0;border-radius:14px;
+  padding:16px 20px;font-size:17px;font-weight:500;color:#fff;
+  background:linear-gradient(135deg,#6b7cff,#8a63d2);
+  box-shadow:0 8px 20px rgba(107,124,255,.28);
+  transition:opacity .15s,transform .15s;
+  font-family:inherit;
+}
+.btn:active{transform:scale(.985);opacity:.9}
+.btn[disabled]{opacity:.4;box-shadow:none}
+/* 答题页 */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.bar{flex:1;height:4px;border-radius:4px;background:#e4e7f0;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#6b7cff,#8a63d2);transition:width .35s ease}
+.num{font-size:13px;color:#9aa0b0;font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.seclabel{font-size:13px;color:#8a63d2;background:#efeafc;display:inline-block;padding:5px 12px;border-radius:20px;margin-bottom:16px;font-weight:500}
+.q{font-size:20px;line-height:1.7;font-weight:500;margin:0 0 22px;letter-spacing:.2px}
+textarea{
+  width:100%;border:1.5px solid #e2e6f0;border-radius:14px;
+  padding:15px 16px;font-size:16px;line-height:1.7;color:#1d2129;
+  background:#fff;resize:none;outline:none;font-family:inherit;
+  min-height:104px;transition:border-color .2s,box-shadow .2s;
+}
+textarea:focus{border-color:#8a9bff;box-shadow:0 0 0 3px rgba(107,124,255,.12)}
+textarea::placeholder{color:#b6bbc9}
+.foot{margin-top:20px}
+.hint{font-size:13px;color:#c0c4d0;text-align:center;margin-top:14px}
+/* 完成页 */
+.center{text-align:center}
+.big{font-size:22px;font-weight:600;margin:0 0 12px}
+</style>
+</head>
+<body>
+
+<section class="screen on" id="s-intro">
+  <div class="wrap">
+    <h1>聊聊你</h1>
+    <div class="sub">
+      <span>一共 20 个小问题，没有标准答案。</span>
+      <span>想到什么写什么，不用讲究措辞。</span>
+    </div>
+    <button class="btn" id="startBtn">开始</button>
+    <div class="tip">你的回答会直接发给提问的人，不会显示在屏幕上。</div>
+  </div>
+</section>
+
+<section class="screen" id="s-quiz">
+  <div class="wrap">
+    <div class="top">
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="num" id="numTxt">1 / 20</div>
+    </div>
+    <div id="secLabel" class="seclabel" style="display:none"></div>
+    <div class="q" id="qText"></div>
+    <textarea id="ansBox" rows="3" placeholder="在这里写…" autocomplete="off"></textarea>
+    <div class="foot">
+      <button class="btn" id="nextBtn">下一题</button>
+    </div>
+    <div class="hint" id="hint"></div>
+  </div>
+</section>
+
+<section class="screen" id="s-done">
+  <div class="wrap center">
+    <div class="big" id="doneTxt">谢谢</div>
+  </div>
+</section>
+
+<script>
+var NTFY_URL = "https://ntfy.sh/dsh58c91088a522794754df4191";
+var TITLE_B64 = "6Zeu562U6K6w5b2V";
+var QUESTIONS = [{"key": "q01", "text": "周末通常是睡到自然醒，还是会早早起来？", "sec": ""}, {"key": "q02", "text": "休息的时候，你更想出门走走，还是待在家里？", "sec": ""}, {"key": "q03", "text": "最近一次觉得「今天过得还不错」，是因为什么？", "sec": ""}, {"key": "q04", "text": "有没有一部反复看也不腻的剧或者电影？", "sec": ""}, {"key": "q05", "text": "吃饭这件事上，你是「固定那几家」，还是「总想试试新的」？", "sec": ""}, {"key": "q06", "text": "如果凭空多出一个完全空着的下午，你会怎么用？", "sec": ""}, {"key": "q07", "text": "有没有一直想学、但还没开始的事情？", "sec": ""}, {"key": "q08", "text": "手机相册里，你最多的是哪一类照片？", "sec": ""}, {"key": "q09", "text": "遇到不太熟的人，你一般是先观察，还是先开口？", "sec": "再聊细一点"}, {"key": "q10", "text": "你身上有什么特点，容易被别人误会、其实并不是那样？", "sec": "再聊细一点"}, {"key": "q11", "text": "心情不太好的时候，你一般找人说说，还是自己待一会儿？", "sec": "再聊细一点"}, {"key": "q12", "text": "别人夸你哪一句，你会真的往心里去？", "sec": "再聊细一点"}, {"key": "q13", "text": "有没有一直想改掉、但总也改不掉的毛病？", "sec": "再聊细一点"}, {"key": "q14", "text": "你觉得自己这几年，最大的变化是什么？", "sec": "再聊细一点"}, {"key": "q15", "text": "身边的朋友通常会怎么形容你？", "sec": "最后几个，可能要想一想"}, {"key": "q16", "text": "你身边有没有一个人，对你的影响比你以为的还要大？", "sec": "最后几个，可能要想一想"}, {"key": "q17", "text": "有没有一件当时没做、后来偶尔还会想起来的事？", "sec": "最后几个，可能要想一想"}, {"key": "q18", "text": "上一次你为一件事投入很久，是什么时候、为了什么？", "sec": "最后几个，可能要想一想"}, {"key": "q19", "text": "如果现在能给三年前的自己留一句话，你会说什么？", "sec": "最后几个，可能要想一想"}, {"key": "q20", "text": "接下来一年，你最想给自己留下的是什么？", "sec": "最后几个，可能要想一想"}];
+
+var idx = 0, answers = [];
+
+function $(id){ return document.getElementById(id); }
+function show(id){
+  var ss = document.querySelectorAll('.screen');
+  for (var i=0;i<ss.length;i++) ss[i].className = 'screen';
+  $(id).className = 'screen on';
+}
+
+function render(){
+  var q = QUESTIONS[idx];
+  $('numTxt').textContent = (idx+1) + ' / ' + QUESTIONS.length;
+  $('barFill').style.width = ((idx)/QUESTIONS.length*100) + '%';
+  if (q.sec && (!idx || QUESTIONS[idx-1].sec !== q.sec)) {
+    $('secLabel').textContent = q.sec;
+    $('secLabel').style.display = 'inline-block';
+  } else {
+    $('secLabel').style.display = 'none';
+  }
+  $('qText').textContent = q.text;
+  var box = $('ansBox');
+  box.value = answers[idx] || '';
+  $('nextBtn').textContent = (idx === QUESTIONS.length-1) ? '写完啦' : '下一题';
+  $('hint').textContent = '';
+  setTimeout(function(){ try{ box.focus(); }catch(e){} }, 120);
+}
+
+function next(){
+  var v = $('ansBox').value.replace(/^\s+|\s+$/g,'');
+  if (!v) { $('hint').textContent = '随便写两句就行'; return; }
+  answers[idx] = v;
+  if (idx < QUESTIONS.length-1) {
+    idx++;
+    render();
+  } else {
+    finish();
+  }
+}
+
+function buildText(){
+  var lines = [];
+  lines.push('============================================');
+  lines.push(' 问答记录   ' + fmt(new Date()));
+  lines.push('============================================');
+  for (var i=0;i<QUESTIONS.length;i++){
+    lines.push('');
+    lines.push('[' + (i+1) + '] ' + QUESTIONS[i].text);
+    lines.push('     ' + (answers[i] || ''));
+  }
+  lines.push('');
+  lines.push('共 ' + QUESTIONS.length + ' 题');
+  return lines.join('\n');
+}
+function fmt(d){
+  function p(n){ return n<10?'0'+n:''+n; }
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function bytes(str){
+  try { return new Blob([str]).size; } catch(e) { return str.length*3; }
+}
+function chunks(text, limit){
+  var out=[], cur=[], size=0;
+  var lines = text.split('\n');
+  for (var i=0;i<lines.length;i++){
+    var l = lines[i]+'\n';
+    var b = bytes(l);
+    if (size>0 && size+b>limit){ out.push(cur.join('')); cur=[]; size=0; }
+    cur.push(l); size+=b;
+  }
+  if (cur.length) out.push(cur.join(''));
+  return out;
+}
+
+function post(body, part, total){
+  return new Promise(function(resolve){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', NTFY_URL, true);
+    xhr.setRequestHeader('Title', '=?UTF-8?B?' + TITLE_B64 + '?=' + (total>1 ? ' ('+part+'/'+total+')' : ''));
+    xhr.setRequestHeader('Tags', 'memo');
+    xhr.timeout = 20000;
+    xhr.onload = function(){ resolve(xhr.status >= 200 && xhr.status < 300); };
+    xhr.onerror = function(){ resolve(false); };
+    xhr.ontimeout = function(){ resolve(false); };
+    try { xhr.send(body); } catch(e) { resolve(false); }
+  });
+}
+
+function savePending(txt){ try{ localStorage.setItem('qa_pending', txt); }catch(e){} }
+function loadPending(){ try{ return localStorage.getItem('qa_pending'); }catch(e){ return null; } }
+function clearPending(){ try{ localStorage.removeItem('qa_pending'); }catch(e){} }
+
+function push(text){
+  var parts = chunks(text, 3000);
+  var chain = Promise.resolve(true);
+  for (var i=0;i<parts.length;i++){
+    (function(p, body){
+      chain = chain.then(function(ok){
+        if (!ok) return false;
+        return post(body, p+1, parts.length);
+      });
+    })(i, parts[i]);
+  }
+  return chain;
+}
+
+function finish(){
+  show('s-done');
+  var text = buildText();
+  savePending(text);
+  push(text).then(function(ok){
+    if (ok) clearPending();
+  });
+}
+
+$('startBtn').onclick = function(){ show('s-quiz'); idx=0; render(); };
+$('nextBtn').onclick = next;
+$('ansBox').addEventListener('keydown', function(e){
+  if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) { e.preventDefault(); next(); }
+});
+
+/* 上次没发出去的，静默补发 */
+(function(){
+  var p = loadPending();
+  if (!p) return;
+  push(p).then(function(ok){ if (ok) clearPending(); });
+})();
+</script>
+</body>
+</html>
