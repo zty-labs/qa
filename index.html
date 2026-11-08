@@ -12,102 +12,86 @@
 html,body{margin:0;padding:0;height:100%}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
-  color:#1f2430;background:#dfe7f2;overflow:hidden;
-  -webkit-font-smoothing:antialiased;
+  color:#1f2430;background:#dfe7f2;overflow:hidden;-webkit-font-smoothing:antialiased;
 }
-.fixed-bg{
-  position:fixed;inset:0;z-index:0;
-  background:#dfe7f2 url(bg.jpg) center 30% / cover no-repeat;
-}
-.fixed-bg::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.10) 55%,rgba(255,255,255,.32) 100%);
-}
-.screen{
-  position:fixed;inset:0;z-index:1;display:none;
-  flex-direction:column;justify-content:flex-start;
+.fixed-bg{position:fixed;inset:0;z-index:0;background:#dfe7f2 url(bg.jpg) center 34% / cover no-repeat}
+.fixed-bg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.16) 60%,rgba(255,255,255,.42))}
+
+.screen{position:fixed;inset:0;z-index:1;display:none;flex-direction:column;justify-content:flex-start;
   overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom));
-}
+  padding:calc(14px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom))}
 .screen.on{display:flex}
 
 .sheet{
   width:100%;max-width:520px;margin:0 auto;
-  background:rgba(255,255,255,.94);
-  -webkit-backdrop-filter:blur(22px) saturate(1.15);
-  backdrop-filter:blur(22px) saturate(1.15);
-  border:1px solid rgba(255,255,255,.9);
-  border-radius:28px;
-  padding:26px 22px;
-  padding-bottom:calc(26px + env(safe-area-inset-bottom));
-  box-shadow:0 12px 44px -18px rgba(28,40,80,.34);
+  background:rgba(255,255,255,.95);
+  -webkit-backdrop-filter:blur(24px) saturate(1.2);
+  backdrop-filter:blur(24px) saturate(1.2);
+  border:1px solid rgba(255,255,255,.92);
+  border-radius:30px;padding:24px 22px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95), 0 16px 50px -22px rgba(28,40,80,.38);
   animation:in .45s cubic-bezier(.22,.8,.3,1);
 }
-@keyframes in{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none}}
+@keyframes in{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
 
 /* ---------- 封面 ---------- */
-.eyebrow{font-size:11.5px;letter-spacing:2.6px;color:#a3aabf;font-weight:600;margin-bottom:14px}
-h1{
-  font-size:32px;font-weight:600;margin:0 0 14px;letter-spacing:1.4px;line-height:1.28;
-  background:linear-gradient(120deg,#2c3348,#7a6cff 75%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.lede{font-size:14.5px;line-height:1.85;color:#6b7286;margin:0 0 26px}
-.lede em{font-style:normal;color:#9aa1b6}
+.eyebrow{font-size:10.5px;letter-spacing:3px;color:#a6adc2;font-weight:600;margin-bottom:16px}
+h1{font-size:30px;font-weight:600;margin:0 0 14px;letter-spacing:1.6px;line-height:1.3;
+  background:linear-gradient(115deg,#2b3145,#7a6cff 82%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:14px;line-height:1.9;color:#6d7488;margin:0 0 24px}
+.lede em{font-style:normal;color:#a0a6bb}
 
+/* ---------- 按钮 ---------- */
 .btn{
-  display:block;width:100%;border:0;border-radius:999px;
-  padding:16px 24px;font-size:16.5px;font-weight:500;color:#fff;letter-spacing:1.2px;
-  background:linear-gradient(120deg,#7286ff,#9a6bff 55%,#c07cf0);
-  box-shadow:0 12px 26px -10px rgba(122,108,255,.75);
+  display:inline-flex;align-items:center;gap:7px;
+  border:0;border-radius:999px;padding:12px 24px;
+  font-size:14.5px;font-weight:500;color:#fff;letter-spacing:.8px;
+  background:linear-gradient(120deg,#7b8cff,#a86bff);
+  box-shadow:0 12px 24px -14px rgba(122,108,255,.9);
   transition:transform .16s cubic-bezier(.2,.8,.3,1),box-shadow .16s;
   font-family:inherit;cursor:pointer;
 }
-.btn:active{transform:scale(.975);box-shadow:0 6px 16px -8px rgba(122,108,255,.7)}
+.btn:active{transform:scale(.96);box-shadow:0 5px 14px -10px rgba(122,108,255,.85)}
+.btn .arw{font-size:13px;opacity:.9;transform:translateY(.5px)}
+.row{margin-top:20px;text-align:right}
 
 /* ---------- 答题 ---------- */
-.head{display:flex;align-items:center;gap:13px;margin-bottom:20px}
-.track{flex:1;height:3px;border-radius:3px;background:rgba(31,36,48,.09);overflow:hidden}
-.fill{display:block;height:100%;width:0;border-radius:3px;
-  background:linear-gradient(90deg,#7286ff,#b06bff);transition:width .45s cubic-bezier(.2,.8,.3,1)}
-.count{font-size:12.5px;color:#9aa0b4;font-variant-numeric:tabular-nums;letter-spacing:.5px;min-width:42px;text-align:right}
+.head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.segs{display:flex;gap:5px;flex:1}
+.seg{height:3px;border-radius:2px;background:rgba(31,36,48,.10);flex:1;transition:background .4s ease}
+.seg.on{background:linear-gradient(90deg,#7b8cff,#b06bff)}
+.count{font-size:11.5px;color:#a2a8bc;font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
 
-.chip{
-  align-self:flex-start;font-size:11.5px;font-weight:600;letter-spacing:.6px;
-  color:#7c6bd8;background:rgba(124,107,216,.11);
-  padding:5px 12px;border-radius:999px;margin-bottom:13px;display:inline-block;
-}
-.qbox{animation:rise .4s cubic-bezier(.22,.8,.3,1)}
-@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.q{font-size:19.5px;line-height:1.7;font-weight:500;margin:0 0 18px;letter-spacing:.3px;color:#20263a}
+.sec{font-size:10.5px;letter-spacing:1.4px;color:#7f86ff;font-weight:600;margin:18px 0 8px}
+.qbox{animation:rise .38s cubic-bezier(.22,.8,.3,1)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.q{font-size:19px;line-height:1.72;font-weight:500;margin:0 0 16px;color:#20263a;letter-spacing:.2px}
+.qbox.nosec .q{margin-top:20px}
 
-textarea{
-  width:100%;border:0;border-radius:16px;padding:16px 17px;
-  font-size:16px;line-height:1.7;color:#1f2430;font-family:inherit;
-  background:#f3f5fa;resize:none;outline:none;min-height:104px;
-  box-shadow:inset 0 0 0 1.5px rgba(31,36,48,.05);
-  transition:box-shadow .2s,background .2s;
-}
-textarea:focus{background:#fff;box-shadow:0 0 0 2px rgba(122,108,255,.42)}
-textarea::placeholder{color:#b3b9cb}
+textarea{width:100%;border:0;border-radius:16px;padding:14px 15px;
+  font-size:15.5px;line-height:1.72;color:#1f2430;font-family:inherit;
+  background:#f4f6fb;resize:none;outline:none;min-height:92px;
+  box-shadow:inset 0 0 0 1.5px rgba(31,36,48,.045);
+  transition:box-shadow .2s,background .2s}
+textarea:focus{background:#fff;box-shadow:0 0 0 2px rgba(122,108,255,.40)}
+textarea::placeholder{color:#b6bccd}
 
-.foot{margin-top:18px}
-.hint{height:18px;margin-top:10px;font-size:12.5px;color:#c25f6a;text-align:center;opacity:0;transition:opacity .2s}
+.hint{height:16px;font-size:12px;color:#c9707a;text-align:right;opacity:0;transition:opacity .2s}
 .hint.on{opacity:1}
 
 /* ---------- 结束 ---------- */
-.finish{text-align:center;padding-top:34px;padding-bottom:36px}
-.dot{
-  width:66px;height:66px;border-radius:50%;margin:0 auto 22px;
-  background:linear-gradient(135deg,#7286ff,#b06bff);
-  box-shadow:0 14px 30px -12px rgba(122,108,255,.8);
+.finish{text-align:center;padding:36px 22px 40px}
+.dot{width:56px;height:56px;border-radius:50%;margin:0 auto 20px;
+  background:linear-gradient(135deg,#7b8cff,#b06bff);
+  box-shadow:0 12px 26px -12px rgba(122,108,255,.85);
   display:flex;align-items:center;justify-content:center;
-  animation:pop .5s cubic-bezier(.2,1.3,.4,1);
-}
+  animation:pop .5s cubic-bezier(.2,1.3,.4,1)}
 @keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
-.dot svg{width:30px;height:30px}
-.thanks{font-size:22px;font-weight:600;letter-spacing:2px;color:#2b3044;margin-bottom:9px}
-.thanks-sub{font-size:13.5px;color:#9aa0b4;letter-spacing:.5px}
+.dot svg{width:26px;height:26px}
+.thanks{font-size:21px;font-weight:600;letter-spacing:2px;color:#2b3044;margin-bottom:8px}
+.thanks-sub{font-size:13px;color:#a0a6bb;letter-spacing:.4px}
 </style>
 </head>
 <body>
@@ -115,36 +99,32 @@ textarea::placeholder{color:#b3b9cb}
 
 <section class="screen on" id="s-intro">
   <div class="sheet">
-    <div class="eyebrow">20 QUESTIONS</div>
+    <div class="eyebrow">10 QUESTIONS</div>
     <h1>聊聊你</h1>
-    <p class="lede">没有标准答案，也不用讲究措辞。<br><em>想到什么写什么就好。</em></p>
-    <button class="btn" id="startBtn">开始</button>
+    <p class="lede">没有标准答案，也不用斟酌措辞。<br><em>想到什么写什么就好。</em></p>
+    <button class="btn" id="startBtn">开始 <span class="arw">→</span></button>
   </div>
 </section>
 
 <section class="screen" id="s-quiz">
   <div class="sheet">
     <div class="head">
-      <div class="track"><i class="fill" id="fill"></i></div>
-      <div class="count" id="count">1 / 20</div>
+      <div class="segs" id="segs"></div>
+      <div class="count" id="count">1/10</div>
     </div>
-    <div class="chip" id="chip" style="display:none"></div>
+    <div class="sec" id="sec" style="display:none"></div>
     <div class="qbox" id="qbox">
       <div class="q" id="q"></div>
       <textarea id="box" rows="3" placeholder="在这里写…" autocomplete="off" autocorrect="off"></textarea>
+      <div class="hint" id="hint">随便写两句就行</div>
+      <div class="row"><button class="btn" id="nextBtn">下一题 <span class="arw">→</span></button></div>
     </div>
-    <div class="foot"><button class="btn" id="nextBtn">下一题</button></div>
-    <div class="hint" id="hint">随便写两句就行</div>
   </div>
 </section>
 
 <section class="screen" id="s-done">
   <div class="sheet finish">
-    <div class="dot">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 6L9 17l-5-5"/>
-      </svg>
-    </div>
+    <div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
     <div class="thanks">谢谢</div>
     <div class="thanks-sub">都答完了，可以关掉了</div>
   </div>
@@ -153,7 +133,7 @@ textarea::placeholder{color:#b3b9cb}
 <script>
 var NTFY_URL = "https://ntfy.sh/dsh58c91088a522794754df4191";
 var TITLE_B64 = "6Zeu562U6K6w5b2V";
-var QUESTIONS = [{"key": "q01", "text": "周末通常是睡到自然醒，还是会早早起来？", "sec": ""}, {"key": "q02", "text": "休息的时候，你更想出门走走，还是待在家里？", "sec": ""}, {"key": "q03", "text": "最近一次觉得「今天过得还不错」，是因为什么？", "sec": ""}, {"key": "q04", "text": "有没有一部反复看也不腻的剧或者电影？", "sec": ""}, {"key": "q05", "text": "吃饭这件事上，你是「固定那几家」，还是「总想试试新的」？", "sec": ""}, {"key": "q06", "text": "如果凭空多出一个完全空着的下午，你会怎么用？", "sec": ""}, {"key": "q07", "text": "有没有一直想学、但还没开始的事情？", "sec": ""}, {"key": "q08", "text": "手机相册里，你最多的是哪一类照片？", "sec": ""}, {"key": "q09", "text": "遇到不太熟的人，你一般是先观察，还是先开口？", "sec": "再聊细一点"}, {"key": "q10", "text": "你身上有什么特点，容易被别人误会、其实并不是那样？", "sec": "再聊细一点"}, {"key": "q11", "text": "心情不太好的时候，你一般找人说说，还是自己待一会儿？", "sec": "再聊细一点"}, {"key": "q12", "text": "别人夸你哪一句，你会真的往心里去？", "sec": "再聊细一点"}, {"key": "q13", "text": "有没有一直想改掉、但总也改不掉的毛病？", "sec": "再聊细一点"}, {"key": "q14", "text": "你觉得自己这几年，最大的变化是什么？", "sec": "再聊细一点"}, {"key": "q15", "text": "身边的朋友通常会怎么形容你？", "sec": "最后几个，可能要想一想"}, {"key": "q16", "text": "你身边有没有一个人，对你的影响比你以为的还要大？", "sec": "最后几个，可能要想一想"}, {"key": "q17", "text": "有没有一件当时没做、后来偶尔还会想起来的事？", "sec": "最后几个，可能要想一想"}, {"key": "q18", "text": "上一次你为一件事投入很久，是什么时候、为了什么？", "sec": "最后几个，可能要想一想"}, {"key": "q19", "text": "如果现在能给三年前的自己留一句话，你会说什么？", "sec": "最后几个，可能要想一想"}, {"key": "q20", "text": "接下来一年，你最想给自己留下的是什么？", "sec": "最后几个，可能要想一想"}];
+var QUESTIONS = [{"key": "q01", "text": "早上醒来的第一件事，你一般会做什么？", "sec": ""}, {"key": "q02", "text": "最近一次由衷地笑，是在什么场景下？", "sec": ""}, {"key": "q03", "text": "有哪件小事，能让你一下子就放松下来？", "sec": ""}, {"key": "q04", "text": "你更喜欢把一切安排好，还是走到哪算哪？", "sec": ""}, {"key": "q05", "text": "你身上有什么习惯，是被身边人说过很多次的？", "sec": "再往里一点"}, {"key": "q06", "text": "心里有事的时候，你更愿意说出来，还是自己消化？", "sec": "再往里一点"}, {"key": "q07", "text": "你觉得自己是被理解得多，还是被误会得多？", "sec": "再往里一点"}, {"key": "q08", "text": "有没有一个人，你在对方身边不用装样子？", "sec": "再往里一点"}, {"key": "q09", "text": "有什么事情你一直想做，却总没开始？", "sec": "最后两个"}, {"key": "q10", "text": "如果可以对一年前的自己说一句话，你会说什么？", "sec": "最后两个"}];
 
 var idx = 0, answers = [];
 function $(id){ return document.getElementById(id); }
@@ -162,21 +142,28 @@ function show(id){
   for (var i=0;i<ss.length;i++) ss[i].className = 'screen';
   $(id).className = 'screen on';
 }
+(function(){
+  var c = $('segs');
+  for (var i=0;i<QUESTIONS.length;i++){
+    var d = document.createElement('i'); d.className = 'seg'; c.appendChild(d);
+  }
+})();
 function render(){
   var q = QUESTIONS[idx];
-  $('count').textContent = (idx+1) + ' / ' + QUESTIONS.length;
-  $('fill').style.width = ((idx)/QUESTIONS.length*100) + '%';
-  if (q.sec && (!idx || QUESTIONS[idx-1].sec !== q.sec)) {
-    $('chip').textContent = q.sec; $('chip').style.display = 'inline-block';
-  } else { $('chip').style.display = 'none'; }
+  $('count').textContent = (idx+1) + '/' + QUESTIONS.length;
+  var segs = $('segs').childNodes;
+  for (var i=0;i<segs.length;i++) segs[i].className = (i <= idx) ? 'seg on' : 'seg';
+  var hasSec = !!q.sec && (idx===0 || QUESTIONS[idx-1].sec !== q.sec);
+  if (hasSec) { $('sec').textContent = q.sec; $('sec').style.display = 'block'; }
+  else { $('sec').style.display = 'none'; }
+  $('qbox').className = 'qbox' + (hasSec ? '' : ' nosec');
   $('q').textContent = q.text;
   var box = $('box');
   box.value = answers[idx] || '';
-  $('nextBtn').textContent = (idx === QUESTIONS.length-1) ? '写完啦' : '下一题';
+  $('nextBtn').innerHTML = (idx === QUESTIONS.length-1 ? '写完啦' : '下一题') + ' <span class="arw">→</span>';
   $('hint').className = 'hint';
-  var qb = $('qbox');
-  qb.style.animation = 'none'; void qb.offsetWidth; qb.style.animation = '';
-  setTimeout(function(){ try{ box.focus(); }catch(e){} }, 200);
+  var qb = $('qbox'); qb.style.animation = 'none'; void qb.offsetWidth; qb.style.animation = '';
+  setTimeout(function(){ try{ box.focus(); }catch(e){} }, 220);
 }
 function next(){
   var v = $('box').value.replace(/^\s+|\s+$/g,'');
