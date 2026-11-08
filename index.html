@@ -99,7 +99,7 @@ textarea::placeholder{color:#b6bccd}
 
 <section class="screen on" id="s-intro">
   <div class="sheet">
-    <div class="eyebrow">10 QUESTIONS</div>
+    <div class="eyebrow" id="eyebrow">10 QUESTIONS</div>
     <h1>聊聊你</h1>
     <p class="lede">没有标准答案，也不用斟酌措辞。<br><em>想到什么写什么就好。</em></p>
     <button class="btn" id="startBtn">开始 <span class="arw">→</span></button>
@@ -142,12 +142,33 @@ function show(id){
   for (var i=0;i<ss.length;i++) ss[i].className = 'screen';
   $(id).className = 'screen on';
 }
-(function(){
-  var c = $('segs');
-  for (var i=0;i<QUESTIONS.length;i++){
-    var d = document.createElement('i'); d.className = 'seg'; c.appendChild(d);
-  }
-})();
+function rebuildSegs(){
+  var c = $('segs'); c.innerHTML = '';
+  for (var i=0;i<QUESTIONS.length;i++){ var d=document.createElement('i'); d.className='seg'; c.appendChild(d); }
+}
+rebuildSegs();
+function loadQ(){
+  return new Promise(function(resolve){
+    try{
+      var x = new XMLHttpRequest();
+      x.open('GET','questions.json?t='+new Date().getTime(),true);
+      x.timeout = 4000;
+      x.onload = function(){
+        try{ var d = JSON.parse(x.responseText); if (d && d.questions && d.questions.length) resolve(d.questions); else resolve(null); }
+        catch(e){ resolve(null); }
+      };
+      x.onerror = function(){ resolve(null); };
+      x.ontimeout = function(){ resolve(null); };
+      x.send();
+    }catch(e){ resolve(null); }
+  });
+}
+var qp = loadQ();
+qp.then(function(list){
+  if (!list || !list.length) return;
+  $('eyebrow').textContent = list.length + ' QUESTIONS';
+  $('count').textContent = '1/' + list.length;
+});
 function render(){
   var q = QUESTIONS[idx];
   $('count').textContent = (idx+1) + '/' + QUESTIONS.length;
@@ -222,6 +243,13 @@ function finish(){
   push(text).then(function(ok){ if (ok) clearPending(); });
 }
 $('startBtn').onclick = function(){ show('s-quiz'); idx=0; render(); };
+if (qp) qp.then(function(list){
+  if (!list || !list.length) return;
+  if (idx===0 && !answers.length && !$('box').value){
+    QUESTIONS = list; rebuildSegs();
+    if ($('s-quiz').className.indexOf('on')>-1) render();
+  }
+});
 $('nextBtn').onclick = next;
 $('box').addEventListener('keydown', function(e){
   if (e.keyCode===13 && (e.ctrlKey||e.metaKey)){ e.preventDefault(); next(); }
